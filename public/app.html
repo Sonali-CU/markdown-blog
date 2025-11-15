@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Sonali's Markdown Blog — Write. Preview. Publish.</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- React (CDN) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Marked + Highlight.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+  <!-- Feather icons for eye icon -->
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <style>
+    :root{
+      --bg:#071029; --card:#071726; --accent1:#7c3aed; --accent2:#3b82f6; --muted:#93a7bf;
+      --glass: rgba(255,255,255,0.03); --glass-2: rgba(255,255,255,0.035);
+      --success:#16a34a; --warn:#f59e0b; --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.08), transparent 8%),
+                  radial-gradient(1000px 500px at 90% 90%, rgba(59,130,246,0.06), transparent 6%),
+                  var(--bg);
+      color:#e6eef8; min-height:100vh;
+    }
+    .appbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px 24px; backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    }
+    .appbar h1{margin:0; font-size:18px}
+    .nav { display:flex; gap:8px; align-items:center; }
+    .btn {
+      background: var(--glass); color:var(--muted); border:1px solid rgba(255,255,255,0.03);
+      padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600;
+    }
+    .btn.primary {
+      background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; border:none;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.08);
+    }
+    .container{max-width:1100px;margin:28px auto;padding:0 18px}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border-radius:12px; padding:18px; margin-bottom:16px; border:1px solid rgba(255,255,255,0.02);
+    }
+    .intro{
+      display:flex; gap:20px; align-items:center; flex-wrap:wrap;
+    }
+    .intro h2{margin:0 0 8px 0; font-size:28px}
+    .intro p{margin:0 0 12px 0; color:var(--muted)}
+    .hero-graphics { width:320px; height:180px; border-radius:12px; background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(59,130,246,0.08)); display:flex; align-items:center; justify-content:center; color: #cfe7ff; font-weight:700; }
+
+    /* layout */
+    .layout{display:grid; grid-template-columns: 1fr 420px; gap:18px}
+    .editor textarea{
+      width:100%; min-height:380px; padding:12px; border-radius:8px; border:none; resize:vertical;
+      background: rgba(0,0,0,0.4); color: #dff1ff; font-family: ui-monospace, Menlo, monospace; font-size:14px;
+      outline: none;
+    }
+    .preview{
+      min-height:380px; padding:12px; border-radius:8px; background:var(--glass-2); overflow:auto; color:#dff1ff;
+      border:1px solid rgba(255,255,255,0.02)
+    }
+    .form-row{display:flex; gap:10px; margin-bottom:12px}
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background: transparent; color:inherit;
+    }
+    .small{font-size:13px;color:var(--muted)}
+    .posts-list{display:grid; gap:12px; margin-top:12px}
+    .post-item{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.02)}
+    .meter {height:10px;border-radius:8px;background:#0b1220; overflow:hidden}
+    .meter > i {display:block;height:100%}
+    .flex {display:flex; gap:8px; align-items:center}
+    .file-input { display:flex; gap:8px; align-items:center }
+    .eye { cursor:pointer; margin-left:-34px; margin-top:6px }
+    .captcha { background: rgba(255,255,255,0.02); padding:8px;border-radius:8px; display:flex; gap:8px; align-items:center }
+    @media(max-width:980px){ .layout{grid-template-columns:1fr; } .editor textarea{ min-height:260px } .hero-graphics{width:100%} }
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <h1>Sonali's Markdown Blog</h1>
+    <div class="nav">
+      <div id="nav-status" class="small"></div>
+      <button class="btn" id="nav-home">Home</button>
+      <button class="btn" id="nav-posts">Posts</button>
+      <button class="btn" id="nav-editor">Editor</button>
+      <button class="btn" id="nav-auth">Login / Sign Up</button>
+    </div>
+  </header>
+
+  <main id="root" class="container"></main>
+
+  <footer class="small center" style="text-align:center; color:var(--muted); margin:36px 0 60px">
+    Made by Sonali © 2025
+  </footer>
+
+  <script src="/app.js"></script>
+  <script>feather.replace()</script>
+</body>
+</html>
+

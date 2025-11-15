@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sonali's Markdown Blog</title>
+  <style>
+    body { display: flex; gap: 20px; padding: 20px; font-family: Arial; }
+    textarea { width: 48%; height: 80vh; padding: 10px; }
+    #preview { width: 48%; padding: 10px; border: 1px solid #ccc; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <textarea id="editor"># Hello Sonali!</textarea>
+  <div id="preview"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const editor = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+
+    function updatePreview() {
+      preview.innerHTML = marked.parse(editor.value);
+    }
+
+    editor.addEventListener('input', updatePreview);
+    updatePreview();
+  </script>
+</body>
+</html>
